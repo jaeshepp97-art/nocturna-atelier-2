@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Nocturna Atelier | Gothic Paintings Emporium</title>
+    <!-- Google Fonts: Gothic Display + Modern Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0a0e;
+            color: #e9e4f0;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* dark scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1722;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a3a5c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7c5e9e;
+        }
+
+        /* Gothic typography for titles */
+        h1, h2, h3, .gothic-title, .hero-title, .section-heading, .product-card h3, .cart-item-title {
+            font-family: 'UnifrakturMaguntia', 'Times New Roman', cursive;
+            letter-spacing: 2px;
+            font-weight: normal;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* HEADER */
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 24px 0;
+            border-bottom: 1px solid #2a2533;
+            margin-bottom: 32px;
+        }
+        .logo-area h1 {
+            font-size: 2.6rem;
+            background: linear-gradient(135deg, #f0e6d0, #b89f7a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            text-shadow: 0 0 4px rgba(0,0,0,0.5);
+        }
+        .logo-area p {
+            font-size: 0.8rem;
+            color: #aa9fbb;
+            letter-spacing: 1px;
+        }
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.8rem;
+            background: #1e1a29;
+            padding: 12px 18px;
+            border-radius: 60px;
+            transition: all 0.2s ease;
+            border: 1px solid #3f3352;
+        }
+        .cart-icon:hover {
+            background: #2f2840;
+            transform: scale(1.02);
+            border-color: #b8860b;
+        }
+        .cart-count {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #b42b4b;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 0 4px rgba(0,0,0,0.6);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            background: radial-gradient(circle at 30% 10%, #1b1424, #030104);
+            border-radius: 2rem;
+            padding: 4rem 2rem;
+            margin: 20px 0 60px 0;
+            text-align: center;
+            border: 1px solid #352e44;
+            box-shadow: 0 20px 35px -12px black;
+        }
+        .hero-title {
+            font-size: 3.8rem;
+            color: #f0e2c5;
+            text-shadow: 0 4px 12px #00000055;
+            margin-bottom: 1rem;
+        }
+        .hero-sub {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+            color: #cbc3dc;
+        }
+        .btn-primary {
+            background: #2c1f38;
+            border: 1px solid #9b7bb5;
+            color: #f2e9ff;
+            padding: 12px 28px;
+            font-weight: 600;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background: #5a3e72;
+            border-color: #d4af37;
+            letter-spacing: 1px;
+            box-shadow: 0 0 12px rgba(180, 130, 200, 0.4);
+        }
+
+        /* PRODUCT GRID */
+        .section-heading {
+            font-size: 2.4rem;
+            margin: 40px 0 24px 0;
+            border-left: 5px solid #b8860b;
+            padding-left: 20px;
+            letter-spacing: 2px;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 32px;
+            margin-bottom: 70px;
+        }
+        .product-card {
+            background: #131017;
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #2e273c;
+            backdrop-filter: blur(2px);
+            box-shadow: 0 12px 20px -12px rgba(0,0,0,0.6);
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            border-color: #aa7bc7;
+            box-shadow: 0 20px 28px -12px #2e1c3e;
+        }
+        .product-img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-img {
+            transform: scale(1.02);
+        }
+        .product-info {
+            padding: 20px 20px 24px;
+        }
+        .product-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #eeddcc;
+        }
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #d4af37;
+            margin: 12px 0;
+            letter-spacing: 1px;
+        }
+        .add-to-cart {
+            background: #2a2336;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 60px;
+            color: #f0e9ff;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+        .add-to-cart i {
+            font-size: 1.1rem;
+        }
+        .add-to-cart:hover {
+            background: #694a8a;
+            color: white;
+            border: none;
+            letter-spacing: 0.5px;
+        }
+
+        /* ABOUT SECTION */
+        .about-section {
+            background: #0f0d14;
+            border-radius: 2rem;
+            padding: 3rem 2rem;
+            margin: 40px 0 60px;
+            border: 1px solid #352e44;
+            box-shadow: 0 12px 25px -12px black;
+        }
+        .about-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #eeddcc;
+            border-left: 5px solid #b8860b;
+            padding-left: 20px;
+        }
+        .about-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            font-size: 1.05rem;
+            color: #d9d0e8;
+            max-width: 85%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .about-text p {
+            line-height: 1.6;
+        }
+        .signature {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            color: #b89f7a;
+        }
+
+        /* CONTACT SECTION */
+        .contact-section {
+            background: #0f0d14;
+            border-radius: 2rem;
+            padding: 3rem 2rem;
+            margin: 40px 0 60px;
+            border: 1px solid #352e44;
+            box-shadow: 0 12px 25px -12px black;
+        }
+        .contact-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #eeddcc;
+            border-left: 5px solid #b8860b;
+            padding-left: 20px;
+        }
+        .contact-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            justify-content: space-between;
+        }
+        .contact-info {
+            flex: 1;
+            min-width: 200px;
+        }
+        .contact-info p {
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+        }
+        .contact-info i {
+            width: 32px;
+            color: #b8860b;
+            font-size: 1.3rem;
+        }
+        .contact-form {
+            flex: 2;
+            min-width: 260px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .contact-form input, .contact-form textarea {
+            background: #1e1a29;
+            border: 1px solid #3f3352;
+            padding: 12px 18px;
+            border-radius: 30px;
+            color: #f0e9ff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color: #b8860b;
+            box-shadow: 0 0 8px rgba(184, 134, 11, 0.3);
+        }
+        .contact-form textarea {
+            min-height: 100px;
+            resize: vertical;
+            border-radius: 20px;
+        }
+        .contact-form button {
+            background: #2c1f38;
+            border: 1px solid #9b7bb5;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #f2e9ff;
+            transition: 0.2s;
+            width: fit-content;
+            min-width: 160px;
+        }
+        .contact-form button:hover {
+            background: #5a3e72;
+            border-color: #d4af37;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 760px) {
+            .about-text {
+                max-width: 100%;
+            }
+            .contact-wrapper {
+                flex-direction: column;
+            }
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: 80px;
+            border-top: 1px solid #292138;
+            padding: 40px 0 32px;
+            text-align: center;
+            color: #948dab;
+            font-size: 0.85rem;
+        }
+        footer i {
+            color: #b97f52;
+            margin: 0 4px;
+        }
+
+        /* ========== CART SIDEBAR ========== */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.25s ease;
+        }
+        .cart-overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 420px;
+            max-width: 90vw;
+            height: 100%;
+            background: #0d0b12;
+            border-left: 2px solid #3e2c52;
+            box-shadow: -8px 0 35px rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            font-family: 'Inter', sans-serif;
+        }
+        .cart-sidebar.open {
+            right: 0;
+        }
+        .cart-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid #2c243b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-header h2 {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: 1.8rem;
+            color: #e9dccc;
+        }
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #b79fcf;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .close-cart:hover {
+            color: #ffb347;
+            transform: rotate(90deg);
+        }
+        .cart-items-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .cart-item {
+            display: flex;
+            gap: 14px;
+            background: #15121e;
+            border-radius: 20px;
+            padding: 12px;
+            border: 1px solid #312a41;
+        }
+        .cart-item-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 14px;
+            background: #1f1b2b;
+        }
+        .cart-item-details {
+            flex: 1;
+        }
+        .cart-item-title {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        .cart-item-price {
+            color: #dbba6c;
+            font-weight: 600;
+        }
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .cart-item-actions button {
+            background: #2b2338;
+            border: none;
+            color: #e2d6ff;
+            width: 28px;
+            height: 28px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .cart-item-actions button:hover {
+            background: #6d4b8c;
+        }
+        .cart-item-qty {
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+        .remove-item-btn {
+            background: none !important;
+            color: #c97e7e !important;
+            font-size: 1rem;
+        }
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid #312842;
+        }
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .checkout-btn {
+            background: #a2596b;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .checkout-btn:hover {
+            background: #c97c6c;
+            letter-spacing: 1px;
+        }
+        .empty-cart-msg {
+            text-align: center;
+            padding: 40px;
+            color: #b1a5cb;
+        }
+
+        /* responsive */
+        @media (max-width: 680px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .container {
+                padding: 0 18px;
+            }
+            .site-header {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .cart-sidebar {
+                width: 100%;
+            }
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="site-header">
+        <div class="logo-area">
+            <h1>Nocturna Atelier</h1>
+            <p>✦ Strange masterpieces & dark romanticism ✦</p>
+        </div>
+        <div class="cart-icon" id="cartIcon">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-title">Whispers of the Abyss</div>
+        <div class="hero-sub">Original acrylic paintings & other witchy art — each piece carries the soul of shadow and light.</div>
+        <button class="btn-primary" id="exploreBtn"><i class="fas fa-feather-alt"></i> Explore collection</button>
+    </section>
+
+    <h2 class="section-heading">✦ Cursed Gallery ✦</h2>
+    <div id="productsContainer" class="products-grid"></div>
+
+    <!-- ABOUT SECTION (seamlessly added) -->
+    <section class="about-section">
+        <h2>✦ About the Atelier ✦</h2>
+        <div class="about-text">
+            <p>Nocturna Atelier was born from the whisper of midnight muses and the pull of the macabre. Each painting is an invocation — acrylics, charcoal, and raw emotion blended to evoke dreams, shadows, and forgotten myths. Artist <strong>Jae Sheppard</strong> crafts every piece as a talisman for those who find beauty in darkness.</p>
+            <p>Our gallery is a sanctuary for collectors who seek the uncanny, the romantic grotesque, and the poetic grotesque. All works are original, signed, and ship worldwide in sustainable, ritual‑like packaging.</p>
+            <div class="signature">— Memento Mori, Memento Vivere —</div>
+        </div>
+    </section>
+
+    <!-- CONTACT US SECTION (seamlessly added) -->
+    <section class="contact-section">
+        <h2>✦ Conjure a Message ✦</h2>
+        <div class="contact-wrapper">
+            <div class="contact-info">
+                <p><i class="fas fa-envelope"></i> dark@nocturnaatelier.com</p>
+                <p><i class="fab fa-instagram"></i> @nocturna__atelier</p>
+                <p><i class="fab fa-twitter"></i> @nocturna_art</p>
+                <p><i class="fas fa-map-marker-alt"></i> Cobourg, ON. (by appointment)</p>
+                <p><i class="fas fa-hourglass-half"></i> Responses within 3 moons</p>
+            </div>
+            <form class="contact-form" id="gothicContactForm">
+                <input type="text" placeholder="Your name / shadow sigil" required>
+                <input type="email" placeholder="Raven mail (email)" required>
+                <textarea placeholder="Your message... (commission inquiries, dark blessings, or curses)"></textarea>
+                <button type="submit"><i class="fas fa-feather"></i> Send raven</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p><i class="fas fa-skull"></i> Nocturna Atelier — Where darkness becomes art <i class="fas fa-ghost"></i></p>
+        <p style="margin-top: 10px;">© 2026 | all shadows reserved | gothic paintings for the eternal collector | Artist Jae Sheppard</p>
+    </footer>
+</div>
+
+<!-- CART OVERLAY + SIDEBAR -->
+<div id="cartOverlay" class="cart-overlay"></div>
+<div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <h2><i class="fas fa-shopping-basket"></i> Raven Cart</h2>
+        <button class="close-cart" id="closeCartBtn"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="cartItemsList" class="cart-items-list">
+        <div class="empty-cart-msg">🕯️ Your collection is empty ... add some dark beauty 🕸️</div>
+    </div>
+    <div class="cart-footer">
+        <div class="cart-total">
+            <span>Total Due:</span>
+            <span id="cartTotalPrice">$0.00</span>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn"><i class="fas fa-crown"></i> Claim Masterpiece</button>
+    </div>
+</div>
+
+<script>
+    // ----- Painting Data (gothic collection) -----
+    const paintings = [
+        {
+            id: 1,
+            name: "The Mug",
+            price: 80,
+            image: "TheMug.jpg",
+            alt: "mystic forest painting"
+        },
+        {
+            id: 2,
+            name: "Paranoia Paradolia",
+            price: 125,
+            image: "parapara.jpg",
+            alt: "dark floral with eyes and mouth"
+        },
+        {
+            id: 3,
+            name: "The Consumption",
+            price: 90,
+            image: "love.jpg",
+            alt: "a purple heart with a mouth and eye"
+        },
+        {
+            id: 4,
+            name: "Mushy Maddness",
+            price: 199,
+            image: "spookymush.jpg",
+            alt: "Mushrooms that are covered in eyes with a mouth"
+        },
+        {
+            id: 5,
+            name: "Beauty is Pain",
+            price: 250,
+            image: "flowpow.jpg",
+            alt: "Spooky flowers bright colours covered in eyes"
+        }
+    ];
+
+    // Cart state: array of items { id, name, price, quantity, image }
+    let cart = [];
+
+    // DOM elements
+    const productsContainer = document.getElementById('productsContainer');
+    const cartCountSpan = document.getElementById('cartCount');
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartOverlay = document.getElementById('cartOverlay');
+    const cartItemsContainer = document.getElementById('cartItemsList');
+    const cartTotalSpan = document.getElementById('cartTotalPrice');
+
+    // Helper: save & render cart UI (badge + sidebar)
+    function updateCartUI() {
+        // update cart count badge
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountSpan.innerText = totalItems;
+        // render cart sidebar list
+        renderCartSidebar();
+        // update total in footer
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        cartTotalSpan.innerText = `$${total.toFixed(2)}`;
+    }
+
+    // Render full cart sidebar items
+    function renderCartSidebar() {
+        if (!cartItemsContainer) return;
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = `<div class="empty-cart-msg">🕯️ Your collection is empty ... add some dark beauty 🕸️</div>`;
+            return;
+        }
+        cartItemsContainer.innerHTML = '';
+        cart.forEach(item => {
+            const cartItemDiv = document.createElement('div');
+            cartItemDiv.classList.add('cart-item');
+            cartItemDiv.dataset.id = item.id;
+            cartItemDiv.innerHTML = `
+                <img class="cart-item-img" src="${item.image}" alt="${item.name}" loading="lazy">
+                <div class="cart-item-details">
+                    <div class="cart-item-title">${item.name}</div>
+                    <div class="cart-item-price">$${item.price}</div>
+                    <div class="cart-item-actions">
+                        <button class="decrement-qty" data-id="${item.id}"><i class="fas fa-minus"></i></button>
+                        <span class="cart-item-qty">${item.quantity}</span>
+                        <button class="increment-qty" data-id="${item.id}"><i class="fas fa-plus"></i></button>
+                        <button class="remove-item-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            `;
+            cartItemsContainer.appendChild(cartItemDiv);
+        });
+
+        // attach event listeners to dynamic cart buttons
+        document.querySelectorAll('.decrement-qty').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.dataset.id);
+                updateQuantity(id, -1);
+            });
+        });
+        document.querySelectorAll('.increment-qty').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.dataset.id);
+                updateQuantity(id, 1);
+            });
+        });
+        document.querySelectorAll('.remove-item-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.dataset.id);
+                removeItemFromCart(id);
+            });
+        });
+    }
+
+    // update quantity (+delta) for specific product
+    function updateQuantity(id, delta) {
+        const existing = cart.find(item => item.id === id);
+        if (existing) {
+            const newQty = existing.quantity + delta;
+            if (newQty <= 0) {
+                // remove item
+                cart = cart.filter(item => item.id !== id);
+            } else {
+                existing.quantity = newQty;
+            }
+            updateCartUI();
+            saveCartToLocal();
+        }
+    }
+
+    function removeItemFromCart(id) {
+        cart = cart.filter(item => item.id !== id);
+        updateCartUI();
+        saveCartToLocal();
+    }
+
+    // add to cart function (public)
+    function addToCart(product) {
+        const existingItem = cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: 1,
+                image: product.image
+            });
+        }
+        updateCartUI();
+        saveCartToLocal();
+
+        // subtle micro animation (optional)
+        const cartIcon = document.getElementById('cartIcon');
+        cartIcon.style.transform = 'scale(1.1)';
+        setTimeout(() => { if(cartIcon) cartIcon.style.transform = ''; }, 200);
+    }
+
+    // local storage persistence for a better experience
+    function saveCartToLocal() {
+        localStorage.setItem('gothicCart', JSON.stringify(cart));
+    }
+
+    function loadCartFromLocal() {
+        const saved = localStorage.getItem('gothicCart');
+        if (saved) {
+            try {
+                cart = JSON.parse(saved);
+                updateCartUI();
+            } catch(e) { console.warn(e); }
+        }
+    }
+
+    // render all product cards from paintings array
+    function renderProducts() {
+        if (!productsContainer) return;
+        productsContainer.innerHTML = '';
+        paintings.forEach(painting => {
+            const card = document.createElement('div');
+            card.classList.add('product-card');
+            card.innerHTML = `
+                <img class="product-img" src="${painting.image}" alt="${painting.alt}" loading="lazy">
+                <div class="product-info">
+                    <h3>${painting.name}</h3>
+                    <div class="product-price">$${painting.price}</div>
+                    <button class="add-to-cart" data-id="${painting.id}"><i class="fas fa-eye"></i> Add to collection</button>
+                </div>
+            `;
+            productsContainer.appendChild(card);
+        });
+
+        // attach event listeners to add-to-cart buttons
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.dataset.id);
+                const product = paintings.find(p => p.id === id);
+                if (product) addToCart(product);
+            });
+        });
+    }
+
+    // ----- CART SIDEBAR TOGGLE LOGIC -----
+    function openCart() {
+        cartSidebar.classList.add('open');
+        cartOverlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeCart() {
+        cartSidebar.classList.remove('open');
+        cartOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    // event listeners
+    document.getElementById('cartIcon').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openCart();
+    });
+    document.getElementById('closeCartBtn').addEventListener('click', closeCart);
+    cartOverlay.addEventListener('click', closeCart);
+    // checkout simulation
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+        if(cart.length === 0) {
+            alert("🖤 Your cart is empty. Choose a cursed masterpiece first.");
+            return;
+        }
+        alert(`⚰️ Thank you for embracing darkness! Total: $${cart.reduce((s,i)=> s + i.price*i.quantity,0).toFixed(2)}\nThis is a demo — in a real store you would proceed to checkout.`);
+        // optionally clear cart demo? but keep for experience, you could but we keep cart for demo
+        // i'll not clear unless user wants, but optionally? I'll not clear for demo continuation.
+    });
+    // explore btn scrolls to products
+    document.getElementById('exploreBtn').addEventListener('click', () => {
+        const productSection = document.getElementById('productsContainer');
+        if(productSection) {
+            productSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+
+    // Simple contact form alert (non-intrusive)
+    const contactForm = document.getElementById('gothicContactForm');
+    if(contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert("🦇 Your shadow-message has been sent! The spirits will reply within 48 hours. 🕸️");
+            contactForm.reset();
+        });
+    }
+
+    // initialization
+    function init() {
+        renderProducts();
+        loadCartFromLocal();
+        // Ensure cart UI updates after load
+        updateCartUI();
+        // additional: close cart on escape key
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape' && cartSidebar.classList.contains('open')) {
+                closeCart();
+            }
+        });
+    }
+    init();
+</script>
+</body>
+</html>
