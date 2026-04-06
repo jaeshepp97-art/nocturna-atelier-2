@@ -179,15 +179,76 @@
             border-color: #aa7bc7;
             box-shadow: 0 20px 28px -12px #2e1c3e;
         }
+
+        /* IMAGE CONTAINER WITH ZOOM EFFECT (ART STORE STYLE) */
+        .product-img-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 28px 28px 0 0;
+            background: #07060a;
+        }
         .product-img {
             width: 100%;
             height: 320px;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            display: block;
+            transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            will-change: transform;
         }
+        /* Zoom effect triggered on card hover (real gallery feel) */
         .product-card:hover .product-img {
-            transform: scale(1.02);
+            transform: scale(1.08);
         }
+
+        /* SOLD OVERLAY — elegant dark ribbon style */
+        .sold-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            pointer-events: none; /* allows clicks to pass to button if needed but image not clickable */
+        }
+        .sold-overlay span {
+            font-family: 'UnifrakturMaguntia', cursive;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #e4c48a;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            background: rgba(20, 12, 28, 0.7);
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+            border: 1px solid #b8860b;
+            transform: rotate(-5deg);
+            box-shadow: 0 0 15px rgba(0,0,0,0.6);
+            text-shadow: 0 2px 5px black;
+            backdrop-filter: blur(3px);
+        }
+        /* Additional subtle ribbon effect for darker mood */
+        .sold-overlay::before {
+            content: "⚰️";
+            position: absolute;
+            top: 12px;
+            left: 18px;
+            font-size: 1.6rem;
+            opacity: 0.7;
+            filter: drop-shadow(0 2px 2px black);
+        }
+        .sold-overlay::after {
+            content: "⚰️";
+            position: absolute;
+            bottom: 12px;
+            right: 18px;
+            font-size: 1.6rem;
+            opacity: 0.7;
+            filter: drop-shadow(0 2px 2px black);
+        }
+
         .product-info {
             padding: 20px 20px 24px;
         }
@@ -223,11 +284,18 @@
         .add-to-cart i {
             font-size: 1.1rem;
         }
-        .add-to-cart:hover {
+        .add-to-cart:hover:not(:disabled) {
             background: #694a8a;
             color: white;
-            border: none;
             letter-spacing: 0.5px;
+        }
+        .add-to-cart:disabled {
+            background: #2a2336;
+            opacity: 0.55;
+            cursor: not-allowed;
+            filter: grayscale(0.1);
+            border: 1px solid #5a4a6e;
+            color: #b9accf;
         }
 
         /* ABOUT SECTION */
@@ -378,7 +446,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(4px);
             z-index: 1000;
             visibility: hidden;
@@ -529,7 +597,6 @@
             color: #b1a5cb;
         }
 
-        /* responsive */
         @media (max-width: 680px) {
             .hero-title {
                 font-size: 2.5rem;
@@ -549,6 +616,7 @@
             cursor: pointer;
         }
     </style>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -588,16 +656,16 @@
         <h2>✦ Conjure a Message ✦</h2>
         <div class="contact-wrapper">
             <div class="contact-info">
-                <p><i class="fas fa-envelope"></i> dark@nocturnaatelier.com</p>
+                <p><i class="fas fa-envelope"></i> darkshadownexus666@gmail.com</p>
                 <p><i class="fab fa-instagram"></i> @nocturna__atelier</p>
                 <p><i class="fab fa-twitter"></i> @nocturna_art</p>
                 <p><i class="fas fa-map-marker-alt"></i> Cobourg, ON. (by appointment)</p>
                 <p><i class="fas fa-hourglass-half"></i> Responses within 3 moons</p>
             </div>
             <form class="contact-form" id="gothicContactForm">
-                <input type="text" placeholder="Your name / shadow sigil" required>
-                <input type="email" placeholder="Raven mail (email)" required>
-                <textarea placeholder="Your message... (commission inquiries, dark blessings, or curses)"></textarea>
+                <input type="text" name="user_name" placeholder="Your name / shadow sigil" required>
+<input type="email" name="user_email" placeholder="Raven mail (email)" required>
+<textarea name="message" placeholder="Your message..."></textarea>aceholder="Your message... (commission inquiries, dark blessings, or curses)"></textarea>
                 <button type="submit"><i class="fas fa-feather"></i> Send raven</button>
             </form>
         </div>
@@ -629,49 +697,28 @@
 </div>
 
 <script>
-    // ----- Painting Data (gothic collection) -----
+    // ----- CONFIG -----
+    const IMAGE_PATH = "./images/";
+    const CURRENCY = "CAD";
+
+    const formatPrice = (amount) => {
+        return new Intl.NumberFormat("en-CA", {
+            style: "currency",
+            currency: CURRENCY
+        }).format(amount);
+    };
+
+    // ----- Painting Data with SOLD status (real art store overlay) -----
     const paintings = [
-        {
-            id: 1,
-            name: "The Mug",
-            price: 80,
-            image: "TheMug.jpg",
-            alt: "mystic forest painting"
-        },
-        {
-            id: 2,
-            name: "Paranoia Paradolia",
-            price: 125,
-            image: "parapara.jpg",
-            alt: "dark floral with eyes and mouth"
-        },
-        {
-            id: 3,
-            name: "The Consumption",
-            price: 90,
-            image: "love.jpg",
-            alt: "a purple heart with a mouth and eye"
-        },
-        {
-            id: 4,
-            name: "Mushy Maddness",
-            price: 199,
-            image: "spookymush.jpg",
-            alt: "Mushrooms that are covered in eyes with a mouth"
-        },
-        {
-            id: 5,
-            name: "Beauty is Pain",
-            price: 250,
-            image: "flowpow.jpg",
-            alt: "Spooky flowers bright colours covered in eyes"
-        }
+        { id: 1, name: "The Mug", price: 80, image: IMAGE_PATH + "TheMug.jpg", alt: "mystic forest painting", sold: false },
+        { id: 2, name: "Paranoia Paradolia", price: 125, image: IMAGE_PATH + "parapara.jpg", alt: "dark floral with eyes and mouth", sold: false },
+        { id: 3, name: "The Consumption", price: 90, image: IMAGE_PATH + "love.jpg", alt: "purple heart with mouth and eye", sold: false },
+        { id: 4, name: "Mushy Madness", price: 199, image: IMAGE_PATH + "spookymush.jpg", alt: "mushrooms covered in eyes", sold: false },
+        { id: 5, name: "Beauty is Pain", price: 250, image: IMAGE_PATH + "flowpow.jpg", alt: "spooky flowers covered in eyes", sold: false }
     ];
 
-    // Cart state: array of items { id, name, price, quantity, image }
     let cart = [];
 
-    // DOM elements
     const productsContainer = document.getElementById('productsContainer');
     const cartCountSpan = document.getElementById('cartCount');
     const cartSidebar = document.getElementById('cartSidebar');
@@ -679,215 +726,230 @@
     const cartItemsContainer = document.getElementById('cartItemsList');
     const cartTotalSpan = document.getElementById('cartTotalPrice');
 
-    // Helper: save & render cart UI (badge + sidebar)
+    // ----- Sync cart: remove any sold paintings from cart (inventory sync) -----
+    function syncCartWithSoldStatus() {
+        let changed = false;
+        const newCart = cart.filter(cartItem => {
+            const painting = paintings.find(p => p.id === cartItem.id);
+            if (!painting || painting.sold) {
+                changed = true;
+                return false;
+            }
+            return true;
+        });
+        if (changed) {
+            cart = newCart;
+            saveCartToLocal();
+            updateCartUI();
+        }
+    }
+
+    // ----- CART UI -----
     function updateCartUI() {
-        // update cart count badge
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         cartCountSpan.innerText = totalItems;
-        // render cart sidebar list
-        renderCartSidebar();
-        // update total in footer
+
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        cartTotalSpan.innerText = `$${total.toFixed(2)}`;
+        cartTotalSpan.innerText = formatPrice(total);
+
+        renderCartSidebar();
     }
 
-    // Render full cart sidebar items
     function renderCartSidebar() {
-        if (!cartItemsContainer) return;
         if (cart.length === 0) {
-            cartItemsContainer.innerHTML = `<div class="empty-cart-msg">🕯️ Your collection is empty ... add some dark beauty 🕸️</div>`;
+            cartItemsContainer.innerHTML = `<div class="empty-cart-msg">🕯️ Your collection is empty...</div>`;
             return;
         }
-        cartItemsContainer.innerHTML = '';
-        cart.forEach(item => {
-            const cartItemDiv = document.createElement('div');
-            cartItemDiv.classList.add('cart-item');
-            cartItemDiv.dataset.id = item.id;
-            cartItemDiv.innerHTML = `
-                <img class="cart-item-img" src="${item.image}" alt="${item.name}" loading="lazy">
+
+        cartItemsContainer.innerHTML = cart.map(item => `
+            <div class="cart-item" data-id="${item.id}">
+                <img class="cart-item-img" src="${item.image}" alt="${item.name}">
                 <div class="cart-item-details">
                     <div class="cart-item-title">${item.name}</div>
-                    <div class="cart-item-price">$${item.price}</div>
+                    <div class="cart-item-price">${formatPrice(item.price)}</div>
                     <div class="cart-item-actions">
-                        <button class="decrement-qty" data-id="${item.id}"><i class="fas fa-minus"></i></button>
+                        <button class="decrement-qty" data-id="${item.id}">−</button>
                         <span class="cart-item-qty">${item.quantity}</span>
-                        <button class="increment-qty" data-id="${item.id}"><i class="fas fa-plus"></i></button>
-                        <button class="remove-item-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+                        <button class="increment-qty" data-id="${item.id}">+</button>
+                        <button class="remove-item-btn" data-id="${item.id}">🗑</button>
                     </div>
                 </div>
-            `;
-            cartItemsContainer.appendChild(cartItemDiv);
-        });
-
-        // attach event listeners to dynamic cart buttons
-        document.querySelectorAll('.decrement-qty').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = parseInt(btn.dataset.id);
-                updateQuantity(id, -1);
-            });
-        });
-        document.querySelectorAll('.increment-qty').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = parseInt(btn.dataset.id);
-                updateQuantity(id, 1);
-            });
-        });
-        document.querySelectorAll('.remove-item-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = parseInt(btn.dataset.id);
-                removeItemFromCart(id);
-            });
-        });
+            </div>
+        `).join("");
     }
 
-    // update quantity (+delta) for specific product
+    // ----- Cart event delegation -----
+    cartItemsContainer.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+
+        const id = parseInt(btn.dataset.id);
+        if (btn.classList.contains('increment-qty')) updateQuantity(id, 1);
+        if (btn.classList.contains('decrement-qty')) updateQuantity(id, -1);
+        if (btn.classList.contains('remove-item-btn')) removeItemFromCart(id);
+    });
+
     function updateQuantity(id, delta) {
-        const existing = cart.find(item => item.id === id);
-        if (existing) {
-            const newQty = existing.quantity + delta;
-            if (newQty <= 0) {
-                // remove item
-                cart = cart.filter(item => item.id !== id);
-            } else {
-                existing.quantity = newQty;
-            }
-            updateCartUI();
-            saveCartToLocal();
+        const item = cart.find(i => i.id === id);
+        if (!item) return;
+        item.quantity += delta;
+        if (item.quantity <= 0) {
+            cart = cart.filter(i => i.id !== id);
         }
+        saveCartToLocal();
+        updateCartUI();
     }
 
     function removeItemFromCart(id) {
-        cart = cart.filter(item => item.id !== id);
-        updateCartUI();
+        cart = cart.filter(i => i.id !== id);
         saveCartToLocal();
+        updateCartUI();
     }
 
-    // add to cart function (public)
     function addToCart(product) {
-        const existingItem = cart.find(item => item.id === product.id);
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cart.push({
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                quantity: 1,
-                image: product.image
-            });
+        // Prevent adding sold items (real store behavior)
+        if (product.sold) {
+            alert("⛧ This masterpiece has already been claimed (SOLD). ⛧");
+            return false;
         }
-        updateCartUI();
+        const existing = cart.find(i => i.id === product.id);
+        if (existing) {
+            existing.quantity++;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
         saveCartToLocal();
+        updateCartUI();
 
-        // subtle micro animation (optional)
-        const cartIcon = document.getElementById('cartIcon');
-        cartIcon.style.transform = 'scale(1.1)';
-        setTimeout(() => { if(cartIcon) cartIcon.style.transform = ''; }, 200);
+        const icon = document.getElementById('cartIcon');
+        icon.style.transform = 'scale(1.1)';
+        setTimeout(() => icon.style.transform = '', 200);
+        return true;
     }
 
-    // local storage persistence for a better experience
     function saveCartToLocal() {
         localStorage.setItem('gothicCart', JSON.stringify(cart));
     }
 
     function loadCartFromLocal() {
         const saved = localStorage.getItem('gothicCart');
-        if (saved) {
-            try {
-                cart = JSON.parse(saved);
-                updateCartUI();
-            } catch(e) { console.warn(e); }
-        }
+        try {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed)) cart = parsed;
+        } catch {}
+        syncCartWithSoldStatus();  // remove any sold items from cart on load
     }
 
-    // render all product cards from paintings array
+    // ----- RENDER PRODUCTS with ZOOM CONTAINER + SOLD OVERLAY (real art store) -----
     function renderProducts() {
-        if (!productsContainer) return;
-        productsContainer.innerHTML = '';
-        paintings.forEach(painting => {
-            const card = document.createElement('div');
-            card.classList.add('product-card');
-            card.innerHTML = `
-                <img class="product-img" src="${painting.image}" alt="${painting.alt}" loading="lazy">
-                <div class="product-info">
-                    <h3>${painting.name}</h3>
-                    <div class="product-price">$${painting.price}</div>
-                    <button class="add-to-cart" data-id="${painting.id}"><i class="fas fa-eye"></i> Add to collection</button>
+        productsContainer.innerHTML = paintings.map(p => {
+            const soldOverlayHtml = p.sold ? `<div class="sold-overlay"><span>SOLD</span></div>` : '';
+            const buttonHtml = p.sold 
+                ? `<button class="add-to-cart" data-id="${p.id}" disabled><i class="fas fa-skull"></i> Sold Out</button>`
+                : `<button class="add-to-cart" data-id="${p.id}"><i class="fas fa-crown"></i> Add to collection</button>`;
+            return `
+                <div class="product-card">
+                    <div class="product-img-container">
+                        <img class="product-img" src="${p.image}" alt="${p.alt}" loading="lazy">
+                        ${soldOverlayHtml}
+                    </div>
+                    <div class="product-info">
+                        <h3>${p.name}</h3>
+                        <div class="product-price">${formatPrice(p.price)}</div>
+                        ${buttonHtml}
+                    </div>
                 </div>
             `;
-            productsContainer.appendChild(card);
-        });
+        }).join("");
 
-        // attach event listeners to add-to-cart buttons
-        document.querySelectorAll('.add-to-cart').forEach(btn => {
+        // attach click handlers only for non-disabled buttons (unsold items)
+        document.querySelectorAll('.add-to-cart:not(:disabled)').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const id = parseInt(btn.dataset.id);
                 const product = paintings.find(p => p.id === id);
-                if (product) addToCart(product);
+                if (product && !product.sold) {
+                    addToCart(product);
+                } else if (product && product.sold) {
+                    alert("⛧ This cursed piece is already sold and cannot be added. ⛧");
+                }
             });
         });
     }
 
-    // ----- CART SIDEBAR TOGGLE LOGIC -----
+    // ----- CART OPEN/CLOSE -----
     function openCart() {
         cartSidebar.classList.add('open');
         cartOverlay.classList.add('open');
         document.body.style.overflow = 'hidden';
     }
+
     function closeCart() {
         cartSidebar.classList.remove('open');
         cartOverlay.classList.remove('open');
         document.body.style.overflow = '';
     }
+	
+	(function(){
+    emailjs.init("zxSozeOlDCzX8BNDZ"); // from EmailJS dashboard
+})();
 
-    // event listeners
-    document.getElementById('cartIcon').addEventListener('click', (e) => {
-        e.stopPropagation();
-        openCart();
-    });
+    document.getElementById('cartIcon').addEventListener('click', openCart);
     document.getElementById('closeCartBtn').addEventListener('click', closeCart);
     cartOverlay.addEventListener('click', closeCart);
-    // checkout simulation
+
+    // ----- CHECKOUT DEMO -----
     document.getElementById('checkoutBtn').addEventListener('click', () => {
-        if(cart.length === 0) {
-            alert("🖤 Your cart is empty. Choose a cursed masterpiece first.");
+        if (cart.length === 0) {
+            alert("🖤 Your cart is empty. Add some dark treasures first.");
             return;
         }
-        alert(`⚰️ Thank you for embracing darkness! Total: $${cart.reduce((s,i)=> s + i.price*i.quantity,0).toFixed(2)}\nThis is a demo — in a real store you would proceed to checkout.`);
-        // optionally clear cart demo? but keep for experience, you could but we keep cart for demo
-        // i'll not clear unless user wants, but optionally? I'll not clear for demo continuation.
-    });
-    // explore btn scrolls to products
-    document.getElementById('exploreBtn').addEventListener('click', () => {
-        const productSection = document.getElementById('productsContainer');
-        if(productSection) {
-            productSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+        alert(`🦇 Total: ${formatPrice(total)}\n(⚰️ Ritual checkout would integrate Stripe/payment gateway.)`);
     });
 
-    // Simple contact form alert (non-intrusive)
+    // ----- Scroll to gallery on explore button -----
+    const exploreBtn = document.getElementById('exploreBtn');
+    if (exploreBtn) {
+        exploreBtn.addEventListener('click', () => {
+            const galleryHeading = document.querySelector('.section-heading');
+            if (galleryHeading) {
+                galleryHeading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    }
+
+    // ----- Contact form simple alert (preserve UX) -----
     const contactForm = document.getElementById('gothicContactForm');
-    if(contactForm) {
+    if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert("🦇 Your shadow-message has been sent! The spirits will reply within 48 hours. 🕸️");
+            e.preventDefault();contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm('service_xih26ak', 'template_qkiur9h', this)
+        .then(() => {
+            alert("🕸️ Raven delivered successfully. 🕸️");
+            contactForm.reset();
+        }, (error) => {
+            alert("⚠️ The raven was lost in the void...");
+            console.error(error);
+        });
+});
             contactForm.reset();
         });
     }
 
-    // initialization
+    // ----- ESC key close cart -----
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeCart();
+    });
+
+    // ----- INITIALIZE APP -----
     function init() {
-        renderProducts();
         loadCartFromLocal();
-        // Ensure cart UI updates after load
+        renderProducts();
         updateCartUI();
-        // additional: close cart on escape key
-        document.addEventListener('keydown', (e) => {
-            if(e.key === 'Escape' && cartSidebar.classList.contains('open')) {
-                closeCart();
-            }
-        });
     }
+
     init();
 </script>
 </body>
