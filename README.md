@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <!-- Font Awesome 6 (free icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -23,7 +25,6 @@
             scroll-behavior: smooth;
         }
 
-        /* dark scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -38,7 +39,6 @@
             background: #7c5e9e;
         }
 
-        /* Gothic typography for titles */
         h1, h2, h3, .gothic-title, .hero-title, .section-heading, .product-card h3, .cart-item-title {
             font-family: 'UnifrakturMaguntia', 'Times New Roman', cursive;
             letter-spacing: 2px;
@@ -51,7 +51,6 @@
             padding: 0 24px;
         }
 
-        /* HEADER */
         .site-header {
             display: flex;
             justify-content: space-between;
@@ -109,7 +108,6 @@
             box-shadow: 0 0 4px rgba(0,0,0,0.6);
         }
 
-        /* HERO SECTION */
         .hero {
             background: radial-gradient(circle at 30% 10%, #1b1424, #030104);
             border-radius: 2rem;
@@ -151,7 +149,6 @@
             box-shadow: 0 0 12px rgba(180, 130, 200, 0.4);
         }
 
-        /* PRODUCT GRID */
         .section-heading {
             font-size: 2.4rem;
             margin: 40px 0 24px 0;
@@ -180,7 +177,6 @@
             box-shadow: 0 20px 28px -12px #2e1c3e;
         }
 
-        /* IMAGE CONTAINER WITH ZOOM EFFECT (ART STORE STYLE) */
         .product-img-container {
             position: relative;
             width: 100%;
@@ -196,12 +192,10 @@
             transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             will-change: transform;
         }
-        /* Zoom effect triggered on card hover (real gallery feel) */
         .product-card:hover .product-img {
             transform: scale(1.08);
         }
 
-        /* SOLD OVERLAY — elegant dark ribbon style */
         .sold-overlay {
             position: absolute;
             inset: 0;
@@ -211,7 +205,7 @@
             align-items: center;
             justify-content: center;
             z-index: 5;
-            pointer-events: none; /* allows clicks to pass to button if needed but image not clickable */
+            pointer-events: none;
         }
         .sold-overlay span {
             font-family: 'UnifrakturMaguntia', cursive;
@@ -229,7 +223,6 @@
             text-shadow: 0 2px 5px black;
             backdrop-filter: blur(3px);
         }
-        /* Additional subtle ribbon effect for darker mood */
         .sold-overlay::before {
             content: "⚰️";
             position: absolute;
@@ -298,7 +291,6 @@
             color: #b9accf;
         }
 
-        /* ABOUT SECTION */
         .about-section {
             background: #0f0d14;
             border-radius: 2rem;
@@ -334,7 +326,6 @@
             color: #b89f7a;
         }
 
-        /* CONTACT SECTION */
         .contact-section {
             background: #0f0d14;
             border-radius: 2rem;
@@ -416,6 +407,10 @@
             border-color: #d4af37;
             letter-spacing: 1px;
         }
+        .contact-form button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
         @media (max-width: 760px) {
             .about-text {
                 max-width: 100%;
@@ -425,7 +420,6 @@
             }
         }
 
-        /* FOOTER */
         footer {
             margin-top: 80px;
             border-top: 1px solid #292138;
@@ -439,7 +433,6 @@
             margin: 0 4px;
         }
 
-        /* ========== CART SIDEBAR ========== */
         .cart-overlay {
             position: fixed;
             top: 0;
@@ -616,7 +609,6 @@
             cursor: pointer;
         }
     </style>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -641,7 +633,6 @@
     <h2 class="section-heading">✦ Cursed Gallery ✦</h2>
     <div id="productsContainer" class="products-grid"></div>
 
-    <!-- ABOUT SECTION (seamlessly added) -->
     <section class="about-section">
         <h2>✦ About the Atelier ✦</h2>
         <div class="about-text">
@@ -651,7 +642,7 @@
         </div>
     </section>
 
-    <!-- CONTACT US SECTION (seamlessly added) -->
+    <!-- FIXED CONTACT SECTION: proper HTML fields -->
     <section class="contact-section">
         <h2>✦ Conjure a Message ✦</h2>
         <div class="contact-wrapper">
@@ -664,8 +655,8 @@
             </div>
             <form class="contact-form" id="gothicContactForm">
                 <input type="text" name="user_name" placeholder="Your name / shadow sigil" required>
-<input type="email" name="user_email" placeholder="Raven mail (email)" required>
-<textarea name="message" placeholder="Your message..."></textarea>aceholder="Your message... (commission inquiries, dark blessings, or curses)"></textarea>
+                <input type="email" name="user_email" placeholder="Raven mail (email)" required>
+                <textarea name="message" placeholder="Your message... (commission inquiries, dark blessings, or curses)" required></textarea>
                 <button type="submit"><i class="fas fa-feather"></i> Send raven</button>
             </form>
         </div>
@@ -708,7 +699,7 @@
         }).format(amount);
     };
 
-    // ----- Painting Data with SOLD status (real art store overlay) -----
+    // ----- Painting Data (all unsold for now) -----
     const paintings = [
         { id: 1, name: "The Mug", price: 80, image: IMAGE_PATH + "TheMug.jpg", alt: "mystic forest painting", sold: false },
         { id: 2, name: "Paranoia Paradolia", price: 125, image: IMAGE_PATH + "parapara.jpg", alt: "dark floral with eyes and mouth", sold: false },
@@ -726,7 +717,6 @@
     const cartItemsContainer = document.getElementById('cartItemsList');
     const cartTotalSpan = document.getElementById('cartTotalPrice');
 
-    // ----- Sync cart: remove any sold paintings from cart (inventory sync) -----
     function syncCartWithSoldStatus() {
         let changed = false;
         const newCart = cart.filter(cartItem => {
@@ -744,14 +734,11 @@
         }
     }
 
-    // ----- CART UI -----
     function updateCartUI() {
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         cartCountSpan.innerText = totalItems;
-
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         cartTotalSpan.innerText = formatPrice(total);
-
         renderCartSidebar();
     }
 
@@ -760,7 +747,6 @@
             cartItemsContainer.innerHTML = `<div class="empty-cart-msg">🕯️ Your collection is empty...</div>`;
             return;
         }
-
         cartItemsContainer.innerHTML = cart.map(item => `
             <div class="cart-item" data-id="${item.id}">
                 <img class="cart-item-img" src="${item.image}" alt="${item.name}">
@@ -778,11 +764,9 @@
         `).join("");
     }
 
-    // ----- Cart event delegation -----
     cartItemsContainer.addEventListener('click', (e) => {
         const btn = e.target.closest('button');
         if (!btn) return;
-
         const id = parseInt(btn.dataset.id);
         if (btn.classList.contains('increment-qty')) updateQuantity(id, 1);
         if (btn.classList.contains('decrement-qty')) updateQuantity(id, -1);
@@ -807,20 +791,15 @@
     }
 
     function addToCart(product) {
-        // Prevent adding sold items (real store behavior)
         if (product.sold) {
             alert("⛧ This masterpiece has already been claimed (SOLD). ⛧");
             return false;
         }
         const existing = cart.find(i => i.id === product.id);
-        if (existing) {
-            existing.quantity++;
-        } else {
-            cart.push({ ...product, quantity: 1 });
-        }
+        if (existing) existing.quantity++;
+        else cart.push({ ...product, quantity: 1 });
         saveCartToLocal();
         updateCartUI();
-
         const icon = document.getElementById('cartIcon');
         icon.style.transform = 'scale(1.1)';
         setTimeout(() => icon.style.transform = '', 200);
@@ -837,10 +816,9 @@
             const parsed = JSON.parse(saved);
             if (Array.isArray(parsed)) cart = parsed;
         } catch {}
-        syncCartWithSoldStatus();  // remove any sold items from cart on load
+        syncCartWithSoldStatus();
     }
 
-    // ----- RENDER PRODUCTS with ZOOM CONTAINER + SOLD OVERLAY (real art store) -----
     function renderProducts() {
         productsContainer.innerHTML = paintings.map(p => {
             const soldOverlayHtml = p.sold ? `<div class="sold-overlay"><span>SOLD</span></div>` : '';
@@ -861,43 +839,63 @@
                 </div>
             `;
         }).join("");
-
-        // attach click handlers only for non-disabled buttons (unsold items)
         document.querySelectorAll('.add-to-cart:not(:disabled)').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const id = parseInt(btn.dataset.id);
                 const product = paintings.find(p => p.id === id);
-                if (product && !product.sold) {
-                    addToCart(product);
-                } else if (product && product.sold) {
-                    alert("⛧ This cursed piece is already sold and cannot be added. ⛧");
-                }
+                if (product && !product.sold) addToCart(product);
+                else if (product && product.sold) alert("⛧ This cursed piece is already sold. ⛧");
             });
         });
     }
 
-    // ----- CART OPEN/CLOSE -----
     function openCart() {
         cartSidebar.classList.add('open');
         cartOverlay.classList.add('open');
         document.body.style.overflow = 'hidden';
     }
-
     function closeCart() {
         cartSidebar.classList.remove('open');
         cartOverlay.classList.remove('open');
         document.body.style.overflow = '';
     }
-	
-	(function(){
-    emailjs.init("zxSozeOlDCzX8BNDZ"); // from EmailJS dashboard
-})();
+
+    // ----- EMAILJS INITIALIZATION -----
+    (function() {
+        emailjs.init("zxSozeOlDCzX8BNDZ");
+    })();
+
+    // ----- FIXED CONTACT FORM HANDLER (no nesting, proper async) -----
+    const contactForm = document.getElementById('gothicContactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Sending...';
+            submitBtn.disabled = true;
+
+            // Replace with your actual EmailJS credentials after creating account
+            emailjs.sendForm('service_xih26ak', 'template_qkiur9h', this)
+                .then(() => {
+                    alert("🕸️ Raven delivered successfully! We'll respond within 3 dark moons. 🕸️");
+                    contactForm.reset();
+                })
+                .catch((error) => {
+                    console.error("EmailJS error:", error);
+                    alert("⚠️ The raven was lost in the void. Please try again later or email us directly.");
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                });
+        });
+    }
 
     document.getElementById('cartIcon').addEventListener('click', openCart);
     document.getElementById('closeCartBtn').addEventListener('click', closeCart);
     cartOverlay.addEventListener('click', closeCart);
 
-    // ----- CHECKOUT DEMO -----
     document.getElementById('checkoutBtn').addEventListener('click', () => {
         if (cart.length === 0) {
             alert("🖤 Your cart is empty. Add some dark treasures first.");
@@ -907,49 +905,23 @@
         alert(`🦇 Total: ${formatPrice(total)}\n(⚰️ Ritual checkout would integrate Stripe/payment gateway.)`);
     });
 
-    // ----- Scroll to gallery on explore button -----
     const exploreBtn = document.getElementById('exploreBtn');
     if (exploreBtn) {
         exploreBtn.addEventListener('click', () => {
             const galleryHeading = document.querySelector('.section-heading');
-            if (galleryHeading) {
-                galleryHeading.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            if (galleryHeading) galleryHeading.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     }
 
-    // ----- Contact form simple alert (preserve UX) -----
-    const contactForm = document.getElementById('gothicContactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();contactForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    emailjs.sendForm('service_xih26ak', 'template_qkiur9h', this)
-        .then(() => {
-            alert("🕸️ Raven delivered successfully. 🕸️");
-            contactForm.reset();
-        }, (error) => {
-            alert("⚠️ The raven was lost in the void...");
-            console.error(error);
-        });
-});
-            contactForm.reset();
-        });
-    }
-
-    // ----- ESC key close cart -----
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeCart();
     });
 
-    // ----- INITIALIZE APP -----
     function init() {
         loadCartFromLocal();
         renderProducts();
         updateCartUI();
     }
-
     init();
 </script>
 </body>
