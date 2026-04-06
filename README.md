@@ -636,8 +636,8 @@
     <section class="about-section">
         <h2>✦ About the Atelier ✦</h2>
         <div class="about-text">
-            <p>Nocturna Atelier was born from the whisper of midnight muses and the pull of the macabre. Each painting is an invocation — acrylics, charcoal, and raw emotion blended to evoke dreams, shadows, and forgotten myths. Artist <strong>Jae Sheppard</strong> crafts every piece as a talisman for those who find beauty in darkness.</p>
-            <p>Our gallery is a sanctuary for collectors who seek the uncanny, the romantic grotesque, and the poetic grotesque. All works are original, signed, and ship worldwide in sustainable, ritual‑like packaging.</p>
+            <p>Nocturna Atelier was born from the whisper of midnight muses and the pull of the macabre. Each painting is an invocation — acrylics, charcoal, and raw emotion blended to evoke dreams, shadows, and the uncanny vally. Artist <strong>Jae Sheppard</strong> crafts every piece as a talisman for those who find beauty in darkness.</p>
+            <p>Our gallery is a sanctuary for collectors who seek the uncanny, the romantic grotesque, and the poetic grotesque. All works are original, signed, and eventually we hope to soon ship worldwide in sustainable, ritual‑like packaging.</p>
             <div class="signature">— Memento Mori, Memento Vivere —</div>
         </div>
     </section>
